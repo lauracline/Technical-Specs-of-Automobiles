@@ -1,0 +1,68 @@
+---
+title: "Auto_Specs_and_Linear_Regression"
+author: "Laura Cline"
+date: "02/08/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Libraries
+```{r}
+library(MASS)
+library(ISLR)
+```
+
+# Simple Linear Regression
+
+```{r}
+write.csv(Auto, "auto.csv")
+```
+
+```{r}
+qualitative_columns = c(2, 8, 9)
+```
+
+```{r}
+fit1 = lm(mpg ~ horsepower, data = Auto)
+summary(fit1)
+```
+
+```{r}
+plot(mpg ~ horsepower, Auto)
+abline(fit1, col='red')
+```
+
+# Multiple Linear Regression 
+
+```{r}
+pairs(Auto) # almost too complicated to work with
+```
+
+```{r}
+fit = lm(mpg~., data = Auto)
+summary(fit)
+```
+
+```{r}
+plot(fit)
+```
+
+```{r}
+# Use update to add some interaction terms 
+summary(update(fit, . ~ . + horsepower:weight))
+```
+
+```{r}
+# Let's see if this is indeed a better model:
+anova(fit, update(fit, . ~ . + horsepower:weight))
+```
+
+```{r}
+# Use update to add some nonlinear terms:
+# Note that others terms i.e., displacement, weight and acceleration should also have a significant non-linear term 
+summary(update(fit, . ~ . + I(horsepower^2)))
+```
+
