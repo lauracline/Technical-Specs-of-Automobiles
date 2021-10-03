@@ -1100,6 +1100,7 @@ MSE = mean((Boston_test$crim - Y_hat)^2)
 print(sprintf("Lasso regression test MSE = %10.3f", MSE))
 print("lasso coefficients")
 print(predict(lasso.mod, type="coefficients", s=bestlam))
+
 ```
 
 ```{r eval=FALSE, include=FALSE}
