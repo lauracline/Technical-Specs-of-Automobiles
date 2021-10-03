@@ -2,7 +2,9 @@
 title: "Subset Selection Methods and Ridge Regression & Lasso"
 author: "Laura Cline"
 date: "29/09/2021"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -1035,7 +1037,7 @@ We will now try to predict per capital crime rate in the `Boston` dataset.
 
 A. Try out some regression methods, such as best subset selection, the lasso, ridge regression and PCR. Present and discuss results for the approaches that you consider. 
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 set.seed(0)
 
 n = dim(Boston)[1]
@@ -1048,7 +1050,7 @@ Boston_train = Boston[train,]
 Boston_test = Boston[test,]
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 # The full linear model:
 m = lm(crim~., data=Boston_train)
 
@@ -1057,20 +1059,20 @@ MSE = mean((Boston_test$crim - Y_hat)^2)
 print(sprintf("Linear model test MSE = %10.3f", MSE))
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 # Ridge Regression:
 Y = Boston_train$crim
 MM = model.matrix(crim~., data=Boston_train)
 cv.out = cv.glmnet(MM, Y, alpha=0)
 plot(cv.out)
 ```
-```{r}
+```{r eval=FALSE, include=FALSE}
 bestlam = cv.out$lambda.1se
 #print( "ridge regression CV best value of lambda (one standard error)" )
 #print( bestlam )
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 ridge.mod = glmnet(MM, Y, alpha=0)
 
 Y_hat = predict(ridge.mod, s=bestlam, newx=model.matrix(crim~., data=Boston_test))
@@ -1078,19 +1080,19 @@ MSE = mean((Boston_test$crim - Y_hat)^2)
 print(sprintf("Ridge regression test MSE = %10.3f", MSE))
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 # The Lasso: 
 
 cv.out = cv.glmnet(MM, Y, alpha=1)
 plot(cv.out)
 ```
-```{r}
+```{r eval=FALSE, include=FALSE}
 bestlam = cv.out$lambda.1se
 #print( "lasso CV best value of lambda (one standard error)" )
 #print( bestlam )
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 lasso.mod = glmnet(MM, Y, alpha=1)
 
 Y_hat = predict(lasso.mod, s=bestlam, newx=model.matrix(crim~., data=Boston_test))
@@ -1100,7 +1102,7 @@ print("lasso coefficients")
 print(predict(lasso.mod, type="coefficients", s=bestlam))
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 # Principal Component Regression:
 
 pcr.mod = pcr(crim ~., data=Boston_train, scale=TRUE, validation="CV")
@@ -1109,21 +1111,21 @@ pcr.mod = pcr(crim ~., data=Boston_train, scale=TRUE, validation="CV")
 validationplot(pcr.mod, val.type = "MSEP")
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 ncomp=3
 Y_hat = predict(pcr.mod, Boston_test, ncomp = ncomp)
 MSE = mean((Boston_test$crim - Y_hat)^2)
 print(sprintf("PCR (with ncomp = %5d), test MSE = %10.3f", ncomp, MSE))
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 # Partial Least Squares:
 pls.mod = plsr(crim~., data=Boston_train, scale=TRUE, validation="CV")
 
 # Use this to select the number of components to include ... looks like CV suggests the best is to use 5 predictors 
 validationplot(pls.mod, val.type="MSEP")
 ```
-```{r}
+```{r eval=FALSE, include=FALSE}
 ncomp = 5
 Y_hat = predict(pls.mod, Boston_test, ncomp=ncomp)
 MSE = mean((Boston_test$crim - Y_hat)^2)
